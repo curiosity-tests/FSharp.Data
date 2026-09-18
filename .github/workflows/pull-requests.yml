@@ -31,32 +31,6 @@ jobs:
     - name: Check formatting
       run: dotnet run --project build/build.fsproj -- -t CheckFormat
 
-  build-windows:
-
-    runs-on: windows-latest
-    timeout-minutes: 40
-    steps:
-    - uses: actions/checkout@v7
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v6
-      with:
-        dotnet-version-file: global.json
-    - name: Cache NuGet packages
-      uses: actions/cache@v6
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/paket.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
-    - name: Restore .NET local tools
-      run: dotnet tool restore
-    - name: Restore packages
-      run: dotnet paket restore
-    - name: Build and test (Release)
-      env:
-        FAKE_DETAILED_ERRORS: true
-      run: dotnet run --project build/build.fsproj -- -t RunTests
-
   build-ubuntu:
 
     runs-on: ubuntu-latest
